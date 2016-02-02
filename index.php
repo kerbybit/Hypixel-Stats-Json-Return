@@ -132,10 +132,6 @@
                     if ($KD==null) {$KD=0;}
                     $KG = $kills/($player->getStats()->getGameFromID(\HypixelPHP\GameTypes::HUNGERGAMES)->get('deaths',0)+$Swins+$Twins);
                     if ($KG==null) {$KG=0;}
-                    $Wkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::HUNGERGAMES)->get('weekly_kills_b',0);
-                    if ($Wkills==null) {$Wkills=0;}
-                    $Mkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::HUNGERGAMES)->get('monthly_kills_b',0);
-                    if ($Mkills==null) {$Mkills=0;}
                     
                     echo '{"game":"Blitz Survival Games",';
                     echo '"stats":"Coins: '.$coins.'",';
@@ -145,8 +141,6 @@
                     
                     echo '"morestats":"KD: '.round($KD,2).'",';
                     echo '"morestats":"Kills Per Game: '.round($KG,2).'",';
-                    echo '"morestats":"Weekly Kills: '.$Wkills.'",';
-                    echo '"morestats":"Monthly Kills: '.$Mkills.'"';
                     echo '}';
                 } 
                 else if (strtoupper($game) == "MCGO" || strtoupper($game) == "CVC" || strtoupper($game) == "COPSVCRIMS" || strtoupper($game) == "COPSVSCRIMS") {
@@ -168,10 +162,6 @@
                     if ($headshots==null) {$headshots=0;}
                     $shotsfired = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::MCGO)->get('shots_fired',0);
                     if ($shotsfired==null) {$shotsfired=0;}
-                    $Wkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::MCGO)->get('weekly_kills_b',0);
-                    if ($Wkills==null) {$Wkills=0;}
-                    $Mkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::MCGO)->get('monthly_kills_b',0);
-                    if ($Mkills==null) {$Mkills=0;}
                     
                     echo '{"game":"Cops Vs Crims",';
                     echo '"stats":"Coins: '.$coins.'",';
@@ -183,8 +173,6 @@
                     echo '"morestats":"KD: '.round($KD,2).'",';
                     echo '"morestats":"HeadShots: '.$headshots.'",';
                     echo '"morestats":"Shots Fired: '.$shotsfired.'",';
-                    echo '"morestats":"Weekly Kills: '.$Wkills.'",';
-                    echo '"morestats":"Monthly Kills: '.$Mkills.'"';
                     echo '}';
                 } 
                 else if (strtoupper($game) == "PAINTBALL" || strtoupper($game) == "PB") {
@@ -203,10 +191,6 @@
                     if ($KD==null) {$KD=0;}
                     $SK = $shotsfired/$kills;
                     if ($SK==null) {$SK=0;}
-                    $Wkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::PAINTBALL)->get('weekly_kills',0);
-                    if ($Wkills==null) {$Wkills=0;}
-                    $Mkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::PAINTBALL)->get('monthly_kills',0);
-                    if ($Mkills==null) {$Mkills=0;}
                     
                     echo '{"game":"PaintBall",';
                     echo '"stats":"Coins: '.$coins.'",';
@@ -217,8 +201,6 @@
                     
                     echo '"morestats":"KD: '.round($KD,2).'",';
                     echo '"morestats":"Shots per Kill: '.round($SK,2).'",';
-                    echo '"morestats":"Weekly Kills: '.$Wkills.'",';
-                    echo '"morestats":"Monthly Kills: '.$Mkills.'"';
                     echo '}';
                 } 
                 else if (strtoupper($game) == "QUAKE" || strtoupper($game) == "QUAKECRAFT") {
@@ -237,10 +219,6 @@
                     $Tkillstreaks = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::QUAKE)->get('killstreaks_teams',0);
                     if ($Tkillstreaks==null) {$Tkillstreaks=0;}
                     
-                    $Wkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::QUAKE)->get('weekly_kills_b',0);
-                    if ($Wkills==null) {$Wkills=0;}
-                    $Mkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::QUAKE)->get('monthly_kills_b',0);
-                    if ($Mkills==null) {$Mkills=0;}
                     $SKD = $Skills/$player->getStats()->getGameFromID(\HypixelPHP\GameTypes::QUAKE)->get('deaths',0);
                     if ($SKD==null) {$SKD=0;}
                     $TKD = $Tkills/$player->getStats()->getGameFromID(\HypixelPHP\GameTypes::QUAKE)->get('deaths_teams',0);
@@ -255,9 +233,7 @@
                     echo '"stats":"Team Wins: '.$Twins.'",';
                     echo '"stats":"Team Kills: '.$Tkills.'",';
                     echo '"stats":"Team KillStreaks: '.$Tkillstreaks.'",';
-                    
-                    echo '"morestats":"Weekly Kills: '.$Wkills.'",';
-                    echo '"morestats":"Monthly Kills: '.$Mkills.'",';
+					
                     echo '"morestats":"Solo KD: '.round($SKD,2).'",';
                     echo '"morestats":"Team KD: '.round($TKD,2).'"';
                     echo '}';
@@ -285,10 +261,6 @@
 					
 					$KD = $kills/$deaths;
                     if ($KD==null) {$KD=0;}
-					$Mwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS)->get('monthly_wins_b',0);
-                    if ($Mwins==null) {$Mwins=0;}
-					$Wwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS)->get('weekly_wins_b',0);
-                    if ($Wwins==null) {$Wwins=0;}
 					
 					echo '{"game":"Walls",';
                     echo '"stats":"Coins: '.$coins.'",';
@@ -298,12 +270,58 @@
 					echo '"stats":"Losses: '.$losses.'",';
                     
 					echo '"morestats":"KD: '.round($KD,2).'",';
-					echo '"morestats":"Monthly Wins: '.$Mwins.'",';
-					echo '"morestats":"Weekly Wins: '.$Wwins.'"';
                     echo '}';
                 } 
                 else if (strtoupper($game) == "WALLS3" || strtoupper($game) == "MEGAWALLS" || strtoupper($game) == "MW") {
-                    echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
+                    $coins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get('coins',0);
+                    if ($coins==null) {$coins=0;}
+					$kills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get('kills',0);
+                    if ($kills==null) {$kills=0;}
+					$wins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get('wins',0);
+                    if ($wins==null) {$wins=0;}
+					
+					$class = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get('chosen_class',0);
+                    if ($class==null) {$class="Zombie";}
+					$anum = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get(strtolower($class).'_a',0);
+                    if ($anum==null) {$anum=0;} $areturn = "";
+					for ($i=0; $i<$anum; $i++) {$areturn=$areturn."&a█";} for ($i=$anum; $i<9; $i++) {$areturn=$areturn."&c█";}
+					$bnum = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get(strtolower($class).'_b',0);
+                    if ($bnum==null) {$bnum=0;} $breturn = "";
+					for ($i=0; $i<$bnum; $i++) {$breturn=$breturn."&a█";} for ($i=$bnum; $i<9; $i++) {$breturn=$breturn."&c█";}
+					$cnum = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get(strtolower($class).'_c',0);
+                    if ($cnum==null) {$cnum=0;} $creturn = "";
+					for ($i=0; $i<$cnum; $i++) {$creturn=$creturn."&a█";} for ($i=$cnum; $i<9; $i++) {$creturn=$creturn."&c█";}
+					$dnum = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get(strtolower($class).'_d',0);
+                    if ($dnum==null) {$dnum=0;} $dreturn = "";
+					for ($i=0; $i<$dnum; $i++) {$dreturn=$dreturn."&a█";} for ($i=$dnum; $i<9; $i++) {$dreturn=$dreturn."&c█";}
+					$gnum = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get(strtolower($class).'_g',0);
+                    if ($gnum==null) {$anum=0;} $greturn = "";
+					for ($i=0; $i<$gnum; $i++) {$greturn=$greturn."&a█";} for ($i=$gnum; $i<9; $i++) {$greturn=$greturn."&c█";}
+					
+					$deaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get('deaths',0);
+					if ($deaths==null) {$deaths=0;}
+					if ($deaths==0 or $kills==0) {$KD=0;} else {$KD=$kills/$deaths;}
+					
+					$losses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::WALLS3)->get('losses',0);
+					if ($losses==null) {$losses=0;}
+					if ($losses==0 or $wins==0) {$WL=0;} else {$WL=$wins/$losses;}
+					
+					echo '{"game":"Mega Walls",';
+                    echo '"stats":"Coins: '.$coins.'",';
+					echo '"stats":"Kills: '.$kills.'",';
+					echo '"stats":"Wins: '.$wins.'",';
+					
+					echo '"stats":"Class: '.$class.'",';
+					echo '"stats":"'.$areturn.'",';
+					echo '"stats":"'.$breturn.'",';
+					echo '"stats":"'.$creturn.'",';
+					echo '"stats":"'.$dreturn.'",';
+					echo '"stats":"'.$greturn.'",';
+					
+					echo '"morestats":"Kill/Death: '.round($KD,2).'",';
+					echo '"morestats":"Win/Loss: '.round($WL,2).'"';
+					echo '}';
+					
                 } 
                 else if (strtoupper($game) == "GINGERBREAD" || strtoupper($game) == "TURBOKARTRACERS" || strtoupper($game) == "TKR") {
                     echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
@@ -321,6 +339,14 @@
 					if ($Twins==null) {$Twins=0;}
 					$eggs = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('egg_thrown',0);
 					if ($eggs==null) {$eggs='none?!?';}
+					$totalkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('kills',0);
+					$totaldeaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('deaths',0);
+					if ($totalkills==null) {$totalkills=0;} if ($totaldeaths==null) {$totaldeaths=0;}
+					if ($totalkills==0 or $totaldeaths==0) {$KD=0;} else {$KD=$totalkills/$totaldeaths;}
+					$totalwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('wins',0);
+					$totallosses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('losses',0);
+					if ($totalwins==null) {$totalwins=0;} if ($totallosses==null) {$totallosses=0;}
+					if ($totalwins==0 or $totallosses==0) {$WL=0;} else {$WL=$totalwins/$totallosses;}
 					
 					echo '{"game":"Sky Wars",';
 					echo '"stats":"Coins: '.$coins.'",';
@@ -330,8 +356,8 @@
 					echo '"stats":"Team Wins: '.$Twins.'",';
 					echo '"stats":"Eggs Thrown: '.$eggs.'",';
 					
-					echo '"morestats":"Kill/Death: '.$coins.'",';
-					echo '"stats":"Win/Loss: '.$coins.'",';
+					echo '"morestats":"Kill/Death: '.round($KD,2).'",';
+					echo '"morestats":"Win/Loss: '.round($WL,2).'",';
 					
                 } 
                 else if (strtoupper($game) == "TRUECOMBAT" || strtoupper($game) == "CRAZYWALLS" || strtoupper($game) == "CW" || strtoupper($game) == "CRAZY") {
@@ -355,14 +381,6 @@
 					$sl = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('smash_level_total',0);
 					if ($sl==null) {$sl=0;}
 					
-					$Wkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('kills_weekly_a',0);
-					if ($Wkills==null) {$Wkills=0;}
-					$Wwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('wins_weekly_a',0);
-					if ($Wwins==null) {$Wwins=0;}
-					$Mkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('kills_monthly_b',0);
-					if ($Mkills==null) {$Mkills=0;}
-					$Mwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('wins_monthly_b',0);
-					if ($Mwins==null) {$Mwins=0;}
 					$KD = $kills / $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('deaths',0);
 					if ($KD==null) {$KD=0;}
 					$WL = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('wins',0) / $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('losses',0);
@@ -377,10 +395,6 @@
 					echo '"stats":"Hero: '.$hero.' &7lvl'.$herolvl.$pg.'",';
 					echo '"stats":"Smash Level: '.$sl.'",';
 					
-					echo '"morestats":"Weekly Kills: '.$Wkills.'",';
-					echo '"morestats":"Weekly Wins: '.$Wwins.'",';
-					echo '"morestats":"Monthly Kills: '.$Mkills.'",';
-					echo '"morestats":"Monthly Wins: '.$Mwins.'",';
 					echo '"morestats":"Kill/Death: '.round($KD,2).'",';
 					echo '"morestats":"Win/Loss: '.round($WL,2).'"';
 					echo '}';
