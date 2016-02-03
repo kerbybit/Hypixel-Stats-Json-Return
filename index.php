@@ -70,7 +70,7 @@
 					$BBwinst = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::ARCADE)->get('wins_buildbattle_teams',0);
                     if ($BBwinst==null) {$BBwinst=0;}
 					
-					$SSwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::ARCADE)->get('wins_santa_says',0);
+					$SSwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::ARCADE)->get('wins_simon_says',0);
                     if ($SSwins==null) {$SSwins=0;}
 					
 					echo '{"game":"Arcade",';
@@ -109,7 +109,7 @@
 					echo '"morestats":"BuildBattle Wins: '.$BBwins.'",';
 					echo '"morestats":"BuildBattle Team Wins: '.$BBwinst.'",';
 					echo '"morestats":"",';
-					echo '"morestats":"SantaSays Wins: '.$SSwins.'"';
+					echo '"morestats":"HypixelSays Wins: '.$SSwins.'"';
 					echo '}';
                 } 
                 else if (strtoupper($game) == "ARENA") {
