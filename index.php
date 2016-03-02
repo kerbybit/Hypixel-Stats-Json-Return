@@ -116,7 +116,137 @@
                     echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
                 } 
                 else if (strtoupper($game) == "BATTLEGROUND" || strtoupper($game) == "WARLORDS"  || strtoupper($game) == "WL") {
-                    echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
+                    $coins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('coins',0);
+                    if ($coins==null) {$coins=0;}
+					$kills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('kills',0);
+                    if ($kills==null) {$kills=0;}
+					$assists = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('assists',0);
+                    if ($assists==null) {$assists=0;}
+					$deaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('deaths',0);
+                    if ($deaths==null) {$deaths=0;}
+					$wins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('wins',0);
+                    if ($wins==null) {$wins=0;}
+					$losses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('losses',0);
+                    if ($losses==null) {$losses=0;}
+					$Dwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('wins_domination',0);
+                    if ($Dwins==null) {$Dwins=0;}
+					$Cwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('wins_capturetheflag',0);
+                    if ($Cwins==null) {$Cwins=0;}
+					$Twins = $wins - ($Dwins + $Cwins);
+					
+					$damage = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('damage',0);
+                    if ($damage==null) {$damage=0;}
+					$heal = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('heal',0);
+                    if ($heal==null) {$heal=0;}
+					$dam_prev = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('damage_prevented',0);
+					if ($dam_prev==null) {$dam_prev=0;}
+					$games = $wins + $losses;
+					
+					if ($damage==0 || $games==0) {$ADR=0;} else {$ADR=$damage/$games;}
+					if ($dam_prev==0 || $games==0) {$ADPR=0;} else {$ADPR=$dam_prev/$games;}
+					if ($heal==0 || $games==0) {$AHR=0;} else {$AHR=$heal/$games;}
+					
+					if ($kills==0 || $deaths==0) {$KD=0;} else {$KD=$kills/$deaths;}
+					if ($wins==0 || $losses==0) {$WL=0;} else {$WL=$wins/$losses;}
+					
+					if ($assists==0 || $games==0) {$AG=0;} else {$AG=$assists/$games;}
+					if ($kills==0 || $games==0) {$KG=0;} else {$KG=$kills/$games;}
+					
+					$class = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('chosen_class',0);
+                    if ($class==null) {$class="warrior";}
+					$spec = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_spec',0);
+                    if ($spec==null) {$spec="berserker";}
+					
+					$Swins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('wins_'.$spec,0);
+                    if ($Swins==null) {$Swins=0;}
+					$Slosses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('losses_'.$spec,0);
+					if ($Slosses==null) {$Slosses=0;}
+					if ($Swins==0 || $Slosses==0) {$SWL=0;} else {$SWL=$Swins/$Slosses;}
+					
+					$Sdamage = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('damage_'.$spec,0);
+					if ($Sdamage==null) {$Sdamage=0;}
+					$Sdam_prev = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('damage_prevented_'.$spec,0);
+					if ($Sdam_prev==null) {$Sdam_prev=0;}
+					$Sgames = $Swins + $Slosses;
+					if ($Sdamage==0 || $Sgames==0) {$SADR=0;} else {$SADR=$Sdamage/$Sgames;}
+					if ($Sdam_prev==0 || $Sgames==0) {$SADPR=0;} else {$SADPR=$Sdam_prev/$Sgames;}
+					
+					if ($class == "warrior") {
+						if ($spec == "berserker") {
+							$Sheal = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('life_leeched_'.$spec,0);
+						} else {
+							$Sheal1 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('life_leeched_'.$class,0);
+							$Sheal2 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('life_leeched_berserker',0);
+							if ($Sheal1==null) {$Sheal1=0;} if ($Sheal2==null) {$Sheal2=0;}
+							$Sheal = $Sheal1 - $Sheal2;
+						}
+						if ($Sheal==null) {$heal=0;}
+					} else {
+						$Sheal = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get('heal_'.$spec,0);
+						if ($Sheal==null) {$Sheal=0;}
+					}
+					if ($Sheal==0 || $Sgames==0) {$SAHR=0;} else {$SAHR=$Sheal/$Sgames;}
+					
+					$CS1 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_skill1',0);
+					if ($CS1==null) {$CS1=0;} $CS1return = "";
+					for ($i=0; $i<$CS1; $i++) {$CS1return=$CS1return."&a█";} for ($i=$CS1; $i<9; $i++) {$CS1return=$CS1return."&c█";}
+					$CS2 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_skill2',0);
+					if ($CS2==null) {$CS2=0;} $CS2return = "";
+					for ($i=0; $i<$CS2; $i++) {$CS2return=$CS2return."&a█";} for ($i=$CS2; $i<9; $i++) {$CS2return=$CS2return."&c█";}
+					$CS3 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_skill3',0);
+					if ($CS3==null) {$CS3=0;} $CS3return = "";
+					for ($i=0; $i<$CS3; $i++) {$CS3return=$CS3return."&a█";} for ($i=$CS3; $i<9; $i++) {$CS3return=$CS3return."&c█";}
+					$CS4 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_skill4',0);
+					if ($CS4==null) {$CS4=0;} $CS4return = "";
+					for ($i=0; $i<$CS4; $i++) {$CS4return=$CS4return."&a█";} for ($i=$CS4; $i<9; $i++) {$CS4return=$CS4return."&c█";}
+					$CS5 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_skill5',0);
+					if ($CS5==null) {$CS5=0;} $CS5return = "";
+					for ($i=0; $i<$CS5; $i++) {$CS5return=$CS5return."&a█";} for ($i=$CS5; $i<9; $i++) {$CS5return=$CS5return."&c█";}
+					
+					$CC1 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_health',0);
+					if ($CC1==null) {$CC1=0;} $CC1return = "";
+					for ($i=0; $i<$CC1; $i++) {$CC1return=$CC1return."&a█";} for ($i=$CC1; $i<9; $i++) {$CC1return=$CC1return."&c█";}
+					$CC2 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_energy',0);
+					if ($CC2==null) {$CC2=0;} $CC2return = "";
+					for ($i=0; $i<$CC2; $i++) {$CC2return=$CC2return."&a█";} for ($i=$CC2; $i<9; $i++) {$CC2return=$CC2return."&c█";}
+					$CC3 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_cooldown',0);
+					if ($CC3==null) {$CC3=0;} $CC3return = "";
+					for ($i=0; $i<$CC3; $i++) {$CC3return=$CC3return."&a█";} for ($i=$CC3; $i<9; $i++) {$CC3return=$CC3return."&c█";}
+					$CC4 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_critchance',0);
+					if ($CC4==null) {$CC4=0;} $CC4return = "";
+					for ($i=0; $i<$CC4; $i++) {$CC4return=$CC4return."&a█";} for ($i=$CC4; $i<9; $i++) {$CC4return=$CC4return."&c█";}
+					$CC5 = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::BATTLEGROUND)->get($class.'_critmultiplier',0);
+					if ($CC5==null) {$CC5=0;} $CC5return = "";
+					for ($i=0; $i<$CC5; $i++) {$CC5return=$CC5return."&a█";} for ($i=$CC5; $i<9; $i++) {$CC5return=$CC5return."&c█";}
+					
+					$Clevel = $CS1+$CS2+$CS3+$CS4+$CS5+$CC1+$CC2+$CC3+$CC4+$CC5;
+					
+					echo '{"game":"WarLords",';
+                    echo '"stats":"Coins: '.$coins.'",';
+					echo '"stats":"Kills: '.$kills.'",';
+					echo '"stats":"Assists: '.$assists.'",';
+					echo '"stats":"Wins: '.$wins.'",';
+					echo '"stats":"Domination Wins: '.$Dwins.'",';
+					echo '"stats":"CTF Wins: '.$Cwins.'",';
+					echo '"stats":"TDM Wins: '.$Twins.'",';
+					echo '"stats":"",';
+					echo '"stats":"Kill/Death: '.round($KD,2).'",';
+					echo '"stats":"Win/Loss: '.round($WL,2).'",';
+					echo '"stats":"Kills Per Game: '.round($KG,2).'",';
+					echo '"stats":"Assists Per Game: '.round($AG,2).'",';
+					echo '"stats":"Damage Per Game: '.round($ADR).'",';
+					echo '"stats":"Damage Prevented Per Game: '.round($ADPR).'",';
+					echo '"stats":"Healing Per Game: '.round($AHR).'",';
+					
+					echo '"morestats":"Class: '.ucfirst($class).'&7'.ucfirst($spec).'&8lvl'.$Clevel.'",';
+					echo '"morestats":"WL: '.round($SWL,2).'   &fDPG: &c'.round($SADR).'   &fDPPG: &e'.round($SADPR).'   &fHPG: &a'.round($SAHR).'",';
+					echo '"morestats":"Skill Upgrades            Combat Upgrades",';
+					echo '"morestats":"'.$CS1return.'          '.$CC1return.'",';
+					echo '"morestats":"'.$CS2return.'          '.$CC2return.'",';
+					echo '"morestats":"'.$CS3return.'          '.$CC3return.'",';
+					echo '"morestats":"'.$CS4return.'          '.$CC4return.'",';
+					echo '"morestats":"'.$CS5return.'          '.$CC5return.'"';
+					echo '}';
                 } 
                 else if (strtoupper($game) == "HUNGERGAMES" || strtoupper($game) == "BLITZ" || strtoupper($game) == "BSG" || strtoupper($game) == "BLITZSURVIVALGAMES") {
                     $coins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::HUNGERGAMES)->get('coins',0);
@@ -139,7 +269,7 @@
                     echo '"stats":"Solo Wins: '.$Swins.'",';
                     echo '"stats":"Team Wins: '.$Twins.'",';
                     
-                    echo '"morestats":"KD: '.round($KD,2).'",';
+                    echo '"morestats":"Kill/Death: '.round($KD,2).'",';
                     echo '"morestats":"Kills Per Game: '.round($KG,2).'",';
                     echo '}';
                 } 
@@ -170,7 +300,7 @@
                     echo '"stats":"Bombs Planted: '.$plant.'",';
                     echo '"stats":"Bombs Defused: '.$defuse.'",';
                     
-                    echo '"morestats":"KD: '.round($KD,2).'",';
+                    echo '"morestats":"Kill/Death: '.round($KD,2).'",';
                     echo '"morestats":"HeadShots: '.$headshots.'",';
                     echo '"morestats":"Shots Fired: '.$shotsfired.'",';
                     echo '}';
@@ -199,7 +329,7 @@
                     echo '"stats":"Wins: '.$wins.'",';
                     echo '"stats":"Shots Fired: '.$shotsfired.'",';
                     
-                    echo '"morestats":"KD: '.round($KD,2).'",';
+                    echo '"morestats":"Kill/Death: '.round($KD,2).'",';
                     echo '"morestats":"Shots per Kill: '.round($SK,2).'",';
                     echo '}';
                 } 
@@ -234,8 +364,8 @@
                     echo '"stats":"Team Kills: '.$Tkills.'",';
                     echo '"stats":"Team KillStreaks: '.$Tkillstreaks.'",';
 					
-                    echo '"morestats":"Solo KD: '.round($SKD,2).'",';
-                    echo '"morestats":"Team KD: '.round($TKD,2).'"';
+                    echo '"morestats":"Solo Kill/Death: '.round($SKD,2).'",';
+                    echo '"morestats":"Team Kill/Death: '.round($TKD,2).'"';
                     echo '}';
                 } 
                 else if (strtoupper($game) == "TNTGames") {
@@ -269,7 +399,7 @@
 					echo '"stats":"Wins: '.$wins.'",';
 					echo '"stats":"Losses: '.$losses.'",';
                     
-					echo '"morestats":"KD: '.round($KD,2).'",';
+					echo '"morestats":"Kill/Death: '.round($KD,2).'",';
                     echo '}';
                 } 
                 else if (strtoupper($game) == "WALLS3" || strtoupper($game) == "MEGAWALLS" || strtoupper($game) == "MW") {
@@ -363,7 +493,7 @@
                 else if (strtoupper($game) == "TRUECOMBAT" || strtoupper($game) == "CRAZYWALLS" || strtoupper($game) == "CW" || strtoupper($game) == "CRAZY") {
                     echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
                 }
-				else if (strtoupper($game) == "SUPERSMASH" || strtoupper($game) == "SMASH" || strtoupper($game) == "SMASHHEROES") {
+				else if (strtoupper($game) == "SUPERSMASH" || strtoupper($game) == "SMASH" || strtoupper($game) == "SMASHHEROES" || strtoupper($game) == "SH") {
 					$coins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('coins',0);
 					if ($coins==null) {$coins=0;}
 					$kills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('kills',0);
