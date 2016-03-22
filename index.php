@@ -368,8 +368,59 @@
                     echo '"morestats":"Team Kill/Death: '.round($TKD,2).'"';
                     echo '}';
                 } 
-                else if (strtoupper($game) == "TNTGames") {
-                    echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
+                else if (strtoupper($game) == "TNTGAMES" || strtoupper($game) == "TNT") {
+					$coins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('coins',0);
+                    if ($coins==null) {$coins=0;}
+					
+					$RWins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('wins_tntrun',0);
+                    if ($RWins==null) {$RWins=0;}
+					$RRecord = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('record_tntrun',0);
+                    if ($RRecord==null) {$RRecord="NaN";}
+					else {$RRecord = gmdate("i:s", $RRecord);}
+					
+					$PWins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('wins_pvprun',0);
+                    if ($PWins==null) {$PWins=0;}
+					$PKills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('kills_pvprun',0);
+                    if ($PKills==null) {$PKills=0;}
+					$PRecord = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('record_pvprun',0);
+                    if ($PRecord==null) {$PRecord="NaN";}
+					else {$PRecord = gmdate("i:s", $PRecord);}
+					
+					$BWins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('wins_bowspleef',0);
+                    if ($BWins==null) {$BWins=0;}
+					$Bloses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('deaths_bowspleef',0);
+                    if ($Bloses==null) {$Bloses=0;}
+					
+					$TWins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('wins_tntag',0);
+                    if ($TWins==null) {$TWins=0;}
+					
+					$WWins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('wins_capture',0);
+                    if ($WWins==null) {$WWins=0;}
+					$WKills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('kills_capture',0);
+                    if ($WKills==null) {$WKills=0;}
+					$WDeaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::TNTGAMES)->get('deaths_capture',0);
+                    if ($WDeaths==null) {$WDeaths=0;}
+					if ($WKills==0 || $WDeaths==0) {$WKD=0;} else {$WKD=$WKills/$WDeaths;}
+					
+                    echo '{"game":"TNTGames",';
+                    echo '"stats":"Coins: '.$coins.'",';
+					echo '"stats":"",';
+					echo '"stats":"TNTRun Wins: '.$RWins.'",';
+					echo '"stats":"TNTRun Record: '.$RRecord.'",';
+					echo '"stats":"",';
+					echo '"stats":"PVPRun Wins: '.$PWins.'",';
+					echo '"stats":"PVPRun Kills: '.$PKills.'",';
+					echo '"stats":"PVPRun Record: '.$PRecord.'",';
+					echo '"stats":"",';
+					echo '"stats":"BowSpleef Wins: '.$BWins.'",';
+					echo '"stats":"BowSpleef Loses: '.$Bloses.'",';
+					echo '"stats":"",';
+					echo '"stats":"TNTTag Wins: '.$TWins.'",';
+					
+					echo '"morestats":"Wizards Wins: '.$WWins.'",';
+					echo '"morestats":"Wizard Kills: '.$WKills.'",';
+					echo '"morestats":"Wizards Kill/Death: '.round($WKD,2).'"';
+					echo '}';
                 } 
                 else if (strtoupper($game) == "UHC" || strtoupper($game) == "ULTRAHARDCORE" || strtoupper($game) == "UHCCHAMPIONS") {
                     echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
@@ -487,7 +538,8 @@
 					echo '"stats":"Eggs Thrown: '.$eggs.'",';
 					
 					echo '"morestats":"Kill/Death: '.round($KD,2).'",';
-					echo '"morestats":"Win/Loss: '.round($WL,2).'",';
+					echo '"morestats":"Win/Loss: '.round($WL,2).'"';
+					echo '}';
 					
                 } 
                 else if (strtoupper($game) == "TRUECOMBAT" || strtoupper($game) == "CRAZYWALLS" || strtoupper($game) == "CW" || strtoupper($game) == "CRAZY") {
