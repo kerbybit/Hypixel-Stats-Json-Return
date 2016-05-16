@@ -589,5 +589,6 @@
             }
         }
     } else {
-        echo 'no data! use ?username=$name&game=$game';
+        echo 'no data! use <strong>?name=&lt;username&gt;&game=&lt;game&gt;</strong><br>
+		Where &lt;username&gt; is a username and &lt;game&gt; is a Hypixel mini-game';
     }
