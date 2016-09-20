@@ -1,8 +1,6 @@
 <?php
-
     include_once('HypixelPHP.php');
     $HypixelPHP = new HypixelPHP\HypixelPHP(['api_key' => '########-####-####-####-############']);
-
     if ($_GET!=null) {
         if ($_GET['name']!=null) {
             $player = $HypixelPHP->getPlayer(['name' => $_GET['name']]);
@@ -423,7 +421,28 @@
 					echo '}';
                 } 
                 else if (strtoupper($game) == "UHC" || strtoupper($game) == "ULTRAHARDCORE" || strtoupper($game) == "UHCCHAMPIONS") {
-                    echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
+                    $coins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::UHC)->get('coins',0);
+                    if ($coins==null) {$coins=0;}
+					$kills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::UHC)->get('kills',0);
+                    if ($kills==null) {$kills=0;}
+					$deaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::UHC)->get('deaths',0);
+                    if ($deaths==null) {$deaths=0;}
+					$wins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::UHC)->get('wins',0);
+                    if ($wins==null) {$wins=0;}
+					$kit = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::UHC)->get('equippedKit',0);
+                    if ($kit==null) {$kit='LEATHER_ARMOR';}
+					$kit = ucwords(strtolower(str_replace('_',' ',$kit)));
+					
+					if ($kills==0 || $deaths==0) {$KD=0;} else {$KD=$kills/$deaths;}
+					
+					echo '{"game":"UHC",';
+					echo '"stats":"Coins: '.$coins.'",';
+					echo '"stats":"Kills: '.$kills.'",';
+					echo '"stats":"Wins: '.$wins.'",';
+					echo '"stats":"Kit: '.$kit.'",';
+					
+					echo '"morestats":"Kill/Death: '.round($KD,2).'"';
+					echo '}';
                 } 
                 else if (strtoupper($game) == "VAMPIREZ" || strtoupper($game) == "VAMPZ" || strtoupper($game) == "VZ") {
                     echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
@@ -510,37 +529,104 @@
                 else if (strtoupper($game) == "SKYWARS" || strtoupper($game) == "SW") {
                     $coins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('coins',0);
 					if ($coins==null) {$coins=0;}
+					
 					$Skills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('kills_solo',0);
 					if ($Skills==null) {$Skills=0;}
 					$Swins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('wins_solo',0);
 					if ($Swins==null) {$Swins=0;}
+					$Sdeaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('deaths_solo',0);
+					if ($Sdeaths==null) {$Sdeaths=0;}
+					if ($Skills!=0 && $Sdeaths!=0) {$SKD = $Skills / $Sdeaths;}
+					else {$SKD = 0;}
+					$Slosses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('losses_solo',0);
+					if ($Slosses==null) {$Slosses=0;}
+					if ($Swins!=0 && $Slosses!=0) {$SWL = $Swins / ($Slosses+$Swins);}
+					else {$SWL = 0;}
+					
 					$Tkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('kills_team',0);
 					if ($Tkills==null) {$Tkills=0;}
 					$Twins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('wins_team',0);
 					if ($Twins==null) {$Twins=0;}
+					$Tdeaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('deaths_team',0);
+					if ($Tdeaths==null) {$Tdeaths=0;}
+					if ($Tkills!=0 && $Tdeaths!=0) {$TKD = $Tkills / $Tdeaths;}
+					else {$TKD = 0;}
+					$Tlosses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('losses_team',0);
+					if ($Tlosses==null) {$Tlosses=0;}
+					if ($Twins!=0 && $Tlosses!=0) {$TWL = $Twins / ($Tlosses+$Twins);}
+					else {$TWL = 0;}
+					
+					$Mkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('kills_mega',0);
+					if ($Mkills==null) {$Mkills=0;}
+					$Mwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('wins_mega',0);
+					if ($Mwins==null) {$Mwins=0;}
+					$Mdeaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('deaths_mega',0);
+					if ($Mdeaths==null) {$Mdeaths=0;}
+					if ($Mkills!=0 && $Mdeaths!=0) {$MKD = $Mkills / $Mdeaths;}
+					else {$MKD = 0;}
+					$Mlosses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('losses_mega',0);
+					if ($Mlosses==null) {$Mlosses=0;}
+					if ($Mwins!=0 && $Mlosses!=0) {$MWL = $Mwins / ($Mlosses+$Mwins);}
+					else {$MWL = 0;}
+					
+					$Rkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('kills_ranked',0);
+					if ($Rkills==null) {$Rkills=0;}
+					$Rwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('wins_ranked',0);
+					if ($Rwins==null) {$Rwins=0;}
+					$Rdeaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('deaths_ranked',0);
+					if ($Rdeaths==null) {$Rdeaths=0;}
+					if ($Rkills!=0 && $Rdeaths!=0) {$RKD = $Rkills / $Rdeaths;}
+					else {$RKD = 0;}
+					$Rlosses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('losses_ranked',0);
+					if ($Rlosses==null) {$Rlosses=0;}
+					if ($Rwins!=0 && $Rlosses!=0) {$RWL = $Rwins / ($Rlosses+$Rwins);}
+					else {$RWL = 0;}
+					
 					$eggs = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('egg_thrown',0);
 					if ($eggs==null) {$eggs='none?!?';}
+					
 					$totalkills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('kills',0);
 					$totaldeaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('deaths',0);
 					if ($totalkills==null) {$totalkills=0;} if ($totaldeaths==null) {$totaldeaths=0;}
 					if ($totalkills==0 or $totaldeaths==0) {$KD=0;} else {$KD=$totalkills/$totaldeaths;}
+					
 					$totalwins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('wins',0);
 					$totallosses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYWARS)->get('losses',0);
 					if ($totalwins==null) {$totalwins=0;} if ($totallosses==null) {$totallosses=0;}
-					if ($totalwins==0 or $totallosses==0) {$WL=0;} else {$WL=$totalwins/$totallosses;}
+					if ($totalwins!=0 && $totallosses!=0) {$WL=$totalwins / ($totallosses+$totalwins);} 
+					else {$WL=0;}
 					
 					echo '{"game":"Sky Wars",';
 					echo '"stats":"Coins: '.$coins.'",';
+					echo '"stats":"",';
 					echo '"stats":"Solo Kills: '.$Skills.'",';
+					echo '"stats":"Solo Deaths: '.$Sdeaths.'",';
 					echo '"stats":"Solo Wins: '.$Swins.'",';
+					echo '"stats":"Solo Kill/Death: '.round($SKD,2).'",';
+					echo '"stats":"Solo Win Ratio: '.round($SWL*100,2).'%",';
+					echo '"stats":"",';
 					echo '"stats":"Team Kills: '.$Tkills.'",';
+					echo '"stats":"Team Deaths: '.$Tdeaths.'",';
 					echo '"stats":"Team Wins: '.$Twins.'",';
-					echo '"stats":"Eggs Thrown: '.$eggs.'",';
+					echo '"stats":"Team Kill/Death: '.round($TKD,2).'",';
+					echo '"stats":"Team Win Ratio: '.round($TWL*100,2).'%",';
+					echo '"stats":"",';
+					echo '"stats":"Mega Kills: '.$Mkills.'",';
+					echo '"stats":"Mega Deaths: '.$Mdeaths.'",';
+					echo '"stats":"Mega Wins: '.$Mwins.'",';
+					echo '"stats":"Mega Kill/Death: '.round($MKD,2).'",';
+					echo '"stats":"Mega Win Ratio: '.round($MWL*100,2).'%",';
+					echo '"stats":"",';
+					echo '"stats":"Ranked Kills: '.$Rkills.'",';
+					echo '"stats":"Ranked Deaths: '.$Rdeaths.'",';
+					echo '"stats":"Ranked Wins: '.$Rwins.'",';
+					echo '"stats":"Ranked Kill/Death: '.round($RKD,2).'",';
+					echo '"stats":"Ranked Win Ratio: '.round($RWL*100,2).'%",';
 					
-					echo '"morestats":"Kill/Death: '.round($KD,2).'",';
-					echo '"morestats":"Win/Loss: '.round($WL,2).'"';
+					echo '"morestats":"Overall Kill/Death: '.round($KD,2).'",';
+					echo '"morestats":"Overall Win Ratio: '.round($WL*100,2).'%",';
+					echo '"morestats":"Eggs Thrown: '.$eggs.'"';
 					echo '}';
-					
                 } 
                 else if (strtoupper($game) == "TRUECOMBAT" || strtoupper($game) == "CRAZYWALLS" || strtoupper($game) == "CW" || strtoupper($game) == "CRAZY") {
                     echo '{"game":"'.$game.'","stats":"No stats available yet!","morestats":"Check back later."}';
@@ -565,8 +651,14 @@
 					
 					$KD = $kills / $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('deaths',0);
 					if ($KD==null) {$KD=0;}
-					$WL = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('wins',0) / $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('losses',0);
-					if ($WL==null) {$WL=0;}
+					
+					
+					$wins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('wins',0);
+					$losses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SUPER_SMASH)->get('losses',0);
+					if ($wins==null) {$wins = 0;}
+					if ($losses==null) {$losses = 0;}
+					if ($wins!=0 && $losses!=0) {$WL = $wins / ($losses+$wins);}
+					else {$WL = 0;}
 					
 					echo '{"game":"Smash Heroes",';
 					echo '"stats":"Coins: '.$coins.'",';
@@ -578,14 +670,48 @@
 					echo '"stats":"Smash Level: '.$sl.'",';
 					
 					echo '"morestats":"Kill/Death: '.round($KD,2).'",';
-					echo '"morestats":"Win/Loss: '.round($WL,2).'"';
+					echo '"morestats":"Win Ratio: '.round($WL*100,2).'%"';
 					echo '}';
-				}
-                else {
-                    echo '{"game":"'.$game.'","stats":"That is not a game or username!","morestats":"That is not a game or username!"}';
+				} else if (strtoupper($game) == "SKYCLASH" || strtoupper($game) == "SC" || strtoupper($game) == "CLASH") {
+					$coins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYCLASH)->get('coins',0);
+					if ($coins==null) {$coins=0;}
+					$kills = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYCLASH)->get('kills',0);
+					if ($kills==null) {$kills=0;}
+					$deaths = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYCLASH)->get('deaths',0);
+					if ($deaths==null) {$deaths=0;}
+					$wins = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYCLASH)->get('wins',0);
+					if ($wins==null) {$wins=0;}
+					$losses = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYCLASH)->get('losses',0);
+					if ($losses==null) {$losses=0;}
+					
+					if ($kills==0 || $deaths==0) {$KD=0;} else {$KD=$kills/$deaths;}
+					if ($wins==0 || $losses==0) {$WL=0;} else {$WL = $wins / ($losses+$wins);}
+					
+					$active_class = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYCLASH)->get('active_class',0);
+					if ($active_class==null) {$active_class=0;}
+					$class_pre = $player->getStats()->getGameFromID(\HypixelPHP\GameTypes::SKYCLASH)->get('class_'.$active_class,0);
+					if ($class_pre==null) {$class_pre='swordsman;HIT_AND_RUN;REGENERATION;RAMPAGE';}
+					$class_array = explode(";",$class_pre);
+					$class = $class_array[0];
+					$class_cards = ucwords(strtolower(str_replace('_',' ',$class_array[1].', '.$class_array[2].', '.$class_array[3])));
+					
+					echo '{"game":"Sky Clash",';
+					echo '"stats":"Coins: '.$coins.'",';
+					echo '"stats":"Kills: '.$kills.'",';
+					echo '"stats":"Wins: '.$wins.'",';
+					echo '"stats":"Kit: '.$class.'",';
+					echo '"stats":"Kit Cards: '.$class_cards.'",';
+					
+					echo '"morestats":"Kill/Death: '.round($KD,2).'",';
+					echo '"morestats":"Win Ratio: '.round($WL*100,2).'%"';
+					echo '}';
+				} else if (strtoupper($_GET['name']) == "KERBYBIT" && strtoupper($game) == "SUPRISE") {
+					echo '{"game":"Suprise","stats":"buttsex: about 12"}';
+				} else {
+                    echo '{"game":"'.$game.'","stats":"That is not a game!","morestats":"That is not a game!"}';
                 }
             } else {
-                echo '{"game":"'.$game.'","stats":"That is not a game or username!","morestats":"That is not a game or username!"}';
+                echo '{"game":"'.$game.'","stats":"That is not a username!","morestats":"That is not a username!"}';
             }
         }
     } else {
